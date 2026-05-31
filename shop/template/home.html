@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Home</title>
+
+    <!-- Google Font: Poppins — clean, modern, easy to import -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* Remove default browser spacing from all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Dark background, light text, Poppins font throughout */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f0f0f;
+            color: #f0f0f0;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            background-color: #1a1a1a;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between; /* logo left, nav right */
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        /* Logo text */
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+        }
+
+        /* Purple part of the logo */
+        .logo span {
+            color: #6c63ff;
+        }
+
+        /* Nav links */
+        nav a {
+            color: #aaa;
+            text-decoration: none; /* removes underline */
+            margin-left: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            color: #6c63ff; /* purple on hover */
+        }
+
+        /* Account button — outlined style */
+        .header-btn {
+            background-color: transparent;
+            color: #f0f0f0;
+            border: 1px solid #444;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header-btn:hover {
+            border-color: #6c63ff;
+            color: #6c63ff;
+        }
+
+        /* ==============================
+           HERO SECTION
+        ============================== */
+
+        /* Two columns: text left, image right */
+        .hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            padding: 80px 60px;
+            background-color: #111;
+        }
+
+        /* Left column */
+        .hero-text {
+            max-width: 500px;
+        }
+
+        /* Small colored badge above heading */
+        .badge {
+            display: inline-block;
+            background-color: #1e1b3a;
+            color: #a89cff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #3a3460;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: white;
+            margin-bottom: 18px;
+        }
+
+        /* Purple highlight word inside heading */
+        .hero-text h1 span {
+            color: #6c63ff;
+        }
+
+        .hero-text p {
+            font-size: 15px;
+            color: #888;
+            line-height: 1.8; /* space between lines */
+            margin-bottom: 35px;
+        }
+
+        /* Buttons row */
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Filled purple button */
+        .btn-primary {
+            padding: 14px 28px;
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background-color: #574fd6;
+        }
+
+        /* Outlined ghost button */
+        .btn-secondary {
+            padding: 14px 28px;
+            background-color: transparent;
+            color: #ccc;
+            border: 1px solid #333;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: #6c63ff;
+            color: #a89cff;
+        }
+
+        /* Right column: image */
+        .hero-image img {
+            width: 430px;
+            height: 420px;
+            object-fit: cover;    /* fills box neatly without stretching */
+            border-radius: 20px;
+            border: 1px solid #2a2a2a;
+        }
+
+        /* ==============================
+           FEATURES STRIP
+        ============================== */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 60px;
+            background-color: #161616;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+
+        /* Each feature box */
+        .feature-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #1e1e1e;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 20px 25px;
+            width: 280px;
+        }
+
+        /* Emoji icon in a small box */
+        .feature-icon {
+            font-size: 22px;
+            background-color: #1e1b3a;
+            border: 1px solid #3a3460;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-box h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f0f0f0;
+            margin-bottom: 3px;
+        }
+
+        .feature-box p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* ==============================
+           PRODUCTS SECTION
+        ============================== */
+        .products-section {
+            padding: 70px 60px;
+            background-color: #0f0f0f;
+        }
+
+        /* Row: section title left, link right */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .section-header a {
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Product cards row */
+        .products-grid {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap; /* cards wrap on smaller screens */
+            justify-content: center;
+        }
+
+        /* Individual card */
+        .product-card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            width: 280px;
+            padding: 20px;
+        }
+
+        .product-card:hover {
+            border-color: #6c63ff; /* purple border on hover */
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        /* Small category label */
+        .product-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: #a89cff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .product-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        /* Price + button on the same row */
+        .product-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 14px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .buy-btn {
+            padding: 8px 18px;
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .buy-btn:hover {
+            background-color: #574fd6;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            background-color: #111;
+            border-top: 1px solid #222;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .footer-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 25px;
+        }
+
+        .footer-links a:hover {
+            color: #6c63ff;
+        }
+
+        /* Bottom copyright strip */
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #0a0a0a;
+            font-size: 12px;
+            color: #444;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER: Logo + nav links + account button -->
+    <header>
+        <div class="logo">My<span>Store</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/Collections/">Collections</a>
+            
+            <a href="/trendings/">Trending</a>
+        </nav>
+        <button class="header-btn"><a href="/Account/">Account</a></button>
+    </header>
+
+    <!-- HERO: Two column layout -->
+    <section class="hero">
+
+        <!-- Left: text + buttons -->
+        <div class="hero-text">
+            <div class="badge">✦ Premium Collection 2026</div>
+            <h1>All Your Needs<br>Are <span>Right Here</span></h1>
+            <p>
+                Discover handpicked premium products tailored to your lifestyle.
+                No clutter — just quality items delivered fast.
+            </p>
+            <div class="hero-buttons">
+                <a href="/register/" class="btn-primary">Shop Now →</a>
+                <a href="/about/" class="btn-secondary">ABOUT US</a>
+            </div>
+        </div>
+
+        <!-- Right: image -->
+        <div class="hero-image">
+            <img
+                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80"
+                alt="Shopping products"
+            >
+        </div>
+
+    </section>
+
+    <!-- FEATURES: 3 trust boxes -->
+    <div class="features">
+
+        <div class="feature-box">
+            <div class="feature-icon">⚡</div>
+            <div>
+                <h3>Free Shipping</h3>
+                <p>On all orders above ₹499</p>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <div class="feature-icon">🔒</div>
+            <div>
+                <h3>Secure Checkout</h3>
+                <p>100% safe and encrypted</p>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <div class="feature-icon">✨</div>
+            <div>
+                <h3>24/7 Support</h3>
+                <p>We are always here to help</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PRODUCTS SECTION -->
+    <section class="products-section">
+
+        <div class="section-header">
+            <h2>Trending Essentials</h2>
+            <a href="#">Browse All →</a>
+        </div>
+
+        <div class="products-grid">
+
+            <!-- Card 1 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80" alt="Headphones">
+                <div class="product-tag">Acoustics</div>
+                <h3>Wireless Headphones</h3>
+                <div class="product-bottom">
+                    <div class="product-price">₹2,999</div>
+                    <button class="buy-btn">Buy</button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80" alt="Watch">
+                <div class="product-tag">Horology</div>
+                <h3>Smart Watch</h3>
+                <div class="product-bottom">
+                    <div class="product-price">₹4,999</div>
+                    <button class="buy-btn">Buy</button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80" alt="Shoes">
+                <div class="product-tag">Footwear</div>
+                <h3>Running Shoes</h3>
+                <div class="product-bottom">
+                    <div class="product-price">₹1,999</div>
+                    <button class="buy-btn">Buy</button>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-brand">
+            <h2>MyStore</h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/privacy/">Privacy</a>
+            <a href="/about/terms/">Terms</a>
+            <a href="/about/contact/">Contact</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Made by a Frontend Developer.</p>
+    </div>
+
+</body>
+</html>

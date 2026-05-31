@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Premium Profile Matrix</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 100% 100%, #1c102e 0%, transparent 40%),
+                radial-gradient(circle at 0% 0%, #0a1b26 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 15%;
+            left: 10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(124, 108, 255, 0.03) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ==============================
+           LAYOUT GEOMETRY
+        ============================== */
+        .account-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 80px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+        }
+
+        /* ==============================
+           LEFT COLUMN: PROFILE CHIP CARD
+        ============================== */
+        .profile-sidebar {
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.5) 0%, rgba(12, 12, 18, 0.5) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 30px 24px;
+            text-align: center;
+            height: fit-content;
+        }
+
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 10px 25px rgba(99, 82, 232, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-sidebar h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .profile-sidebar p {
+            font-size: 12px;
+            color: #71717a;
+            margin-bottom: 24px;
+            word-break: break-all;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #a1a1aa;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+        }
+
+        .menu-link.active {
+            border-left: 3px solid #7c6cff;
+            background: rgba(124, 108, 255, 0.05);
+        }
+
+        /* ==============================
+           RIGHT COLUMN: DYNAMIC CORE PANELS
+        ============================== */
+        .dashboard-main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .section-block {
+            background: linear-gradient(180deg, rgba(16, 16, 24, 0.3) 0%, rgba(8, 8, 14, 0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 24px;
+            padding: 30px;
+        }
+
+        .section-block h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .meta-data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .meta-field {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .meta-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #52525b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .meta-field .field-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e4e4e7;
+        }
+
+        /* ==============================
+           ORDER MATRIX HISTORY LEDGER
+        ============================== */
+        .ledger-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ledger-row {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .ledger-row:hover {
+            border-color: rgba(124, 108, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .ledger-left h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .ledger-left span {
+            font-size: 12px;
+            color: #71717a;
+        }
+
+        .ledger-right {
+            text-align: right;
+        }
+
+        .ledger-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-badge.complete {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+
+        /* ==============================
+           RESPONSIVE RE-ARCHITECTURE
+        ============================== */
+        @media (max-width: 900px) {
+            .account-container {
+                grid-template-columns: 1fr;
+                padding: 0 24px;
+                margin: 30px auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header, footer {
+                padding: 20px 24px;
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            nav {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            nav a {
+                margin-left: 0;
+            }
+            .footer-links {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
+            .footer-links a {
+                margin-left: 0;
+            }
+            .meta-data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/Collections/">Collections</a>
+            <a href="/cart/">Cart</a>
+            <a href="/logout/" class="logout-btn">Terminate Session</a>
+        </nav>
+    </header>
+
+    <main class="account-container">
+        
+        <aside class="profile-sidebar">
+            <div class="avatar-circle">
+                {% if user.is_authenticated %}{{ user.username|slice:":1"|upper }}{% else %}U{% endif %}
+            </div>
+            <h2>{{ user.username|default:"Premium User" }}</h2>
+            <p>{{ user.email|default:"matrix.node@mystore.io" }}</p>
+
+            <div class="sidebar-menu">
+                <a href="/Account/" class="menu-link active">✦ Profile Core</a>
+                <a href="/cart/" class="menu-link">🛒 Active Cart</a>
+                <a href="/Collections/" class="menu-link">📦 Back to Products</a>
+            </div>
+        </aside>
+
+        <section class="dashboard-main">
+            
+            <div class="section-block">
+                <h3>Identity Core Matrix</h3>
+                <div class="meta-data-grid">
+                    <div class="meta-field">
+                        <label>Username Handle</label>
+                        <div class="field-value">{{ user.username|default:"Anonymous Node" }}</div>
+                    </div>
+                    <div class="meta-field">
+                        <label>Email Network Node</label>
+                        <div class="field-value">{{ user.email|default:"No email bound to core account." }}</div>
+                    </div>
+                    <div class="meta-field">
+                        <label>System Authorization Level</label>
+                        <div class="field-value">Verified Premium Account</div>
+                    </div>
+                    <div class="meta-field">
+                        <label>Session Core Status</label>
+                        <div class="field-value" style="color:#10b981;">● Active Connection</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h3>Procurement Ledger History</h3>
+                <div class="ledger-stack">
+                    
+                    <div class="ledger-row">
+                        <div class="ledger-left">
+                            <h4>Order #MS-90812</h4>
+                            <span>Procured on May 24, 2026</span>
+                        </div>
+                        <div class="ledger-right">
+                            <div class="ledger-price">₹24,999</div>
+                            <span class="status-badge complete">Dispatched</span>
+                        </div>
+                    </div>
+
+                    <div class="ledger-row">
+                        <div class="ledger-left">
+                            <h4>Order #MS-88319</h4>
+                            <span>Procured on April 12, 2026</span>
+                        </div>
+                        <div class="ledger-right">
+                            <div class="ledger-price">₹37,998</div>
+                            <span class="status-badge complete">Delivered</span>
+                        </div>
+                    </div>
+
+                    <div class="ledger-row">
+                        <div class="ledger-left">
+                            <h4>Order #MS-81023</h4>
+                            <span>Procured on February 18, 2026</span>
+                        </div>
+                        <div class="ledger-right">
+                            <div class="ledger-price">₹4,500</div>
+                            <span class="status-badge complete">Delivered</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span style="color:#9d92ff">Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/privacy/">Privacy Matrix</a>
+            <a href="/about/terms/">Terms of Use</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+</body>
+</html>

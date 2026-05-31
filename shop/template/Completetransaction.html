@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Transaction Settled Matrix</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, #112423 0%, transparent 45%),
+                radial-gradient(circle at 100% 100%, #120d2b 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        /* ==============================
+           SUCCESS STATUS CORE CONTENT
+        ============================== */
+        .success-wrapper {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+        }
+
+        .success-panel {
+            background: linear-gradient(180deg, rgba(18, 24, 22, 0.4) 0%, rgba(10, 12, 11, 0.4) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 45px;
+            width: 100%;
+            max-width: 540px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .success-panel {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Radial Status Ring Animation */
+        .success-ring-outer {
+            width: 80px;
+            height: 80px;
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .success-ring-inner {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-panel h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+
+        .success-panel p.caption {
+            font-size: 13px;
+            color: #71717a;
+            margin-bottom: 35px;
+        }
+
+        /* ==============================
+           TRANSACTION RECEIPT TIMELINE
+        ============================== */
+        .receipt-ledger {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 35px;
+            text-align: left;
+        }
+
+        .ledger-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .ledger-field:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .ledger-field:first-child {
+            padding-top: 0;
+        }
+
+        .ledger-field label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ledger-field span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .ledger-field span.amount-accent {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Action Nav Mechanics */
+        .actions-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .primary-return-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            display: block;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 20px rgba(99, 82, 232, 0.25);
+        }
+
+        .primary-return-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 25px rgba(99, 82, 232, 0.4);
+        }
+
+        .secondary-outline-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #a1a1aa;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-outline-btn:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/Collections/">Collections</a>
+            <a href="/cart/">Cart Workspace</a>
+        </nav>
+    </header>
+
+    <main class="success-wrapper">
+        
+        <div class="success-panel">
+            
+            <div class="success-ring-outer">
+                <div class="success-ring-inner">✓</div>
+            </div>
+
+            <h1>Transaction Settled</h1>
+            <p class="caption">Your payment packet was confirmed and cleared through node networks.</p>
+
+            <div class="receipt-ledger">
+                <div class="ledger-field">
+                    <label>Order Tracking ID</label>
+                    <span style="font-family: monospace;">#MS-90812423</span>
+                </div>
+                <div class="ledger-field">
+                    <label>System Authorization Code</label>
+                    <span style="font-family: monospace; color: #a1a1aa;">AUTH-77X92</span>
+                </div>
+                <div class="ledger-field">
+                    <label>Settlement Date</label>
+                    <span>May 31, 2026</span>
+                </div>
+                <div class="ledger-field">
+                    <label>Routing Hub Node</label>
+                    <span>Bengaluru Core Grid</span>
+                </div>
+                <div class="ledger-field" style="margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 16px;">
+                    <label style="color: white;">Total Charged Payload</label>
+                    <span class="amount-accent">₹24,999</span>
+                </div>
+            </div>
+
+            <div class="actions-stack">
+                <a href="/Collections/" class="primary-return-btn">Continue Marketplace Session</a>
+                <a href="/" class="secondary-outline-btn">Inspect Order Ledger History</a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span style="color:#9d92ff">Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/privacy/">Privacy Matrix</a>
+            <a href="/about/terms/">Terms of Use</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+</body>
+</html>

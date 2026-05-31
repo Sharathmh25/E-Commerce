@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Register</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            /* Premium gradient background + subtle grid mesh pattern overlay */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 0% 0%, #161233 0%, transparent 45%),
+                radial-gradient(circle at 100% 100%, #0d1b2e 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, #080810 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Decorative premium ambient soft lighting */
+        .ambient-glow {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(124, 108, 255, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        /* ==============================
+           MAIN LAYOUT
+        ============================== */
+        main {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+            gap: 100px;
+        }
+
+        /* ==============================
+           LEFT SIDE — descriptive text
+        ============================== */
+        .left-side {
+            max-width: 420px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(157, 146, 255, 0.1), rgba(157, 146, 255, 0.03));
+            color: #b4abff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(157, 146, 255, 0.2);
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .left-side h1 {
+            font-size: 46px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .left-side h1 span {
+            background: linear-gradient(135deg, #b4abff 0%, #7c6cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .left-side p {
+            font-size: 15px;
+            color: #8a8a93;
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .feature-dot {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .feature-row span {
+            font-size: 14px;
+            color: #b3b3b3;
+            font-weight: 500;
+        }
+
+        /* ==============================
+           RIGHT SIDE — Premium Card
+        ============================== */
+        .card {
+            background: linear-gradient(180deg, rgba(18, 18, 24, 0.7) 0%, rgba(10, 10, 14, 0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px 40px;
+            width: 420px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .card > p {
+            font-size: 14px;
+            color: #71717a;
+            margin-bottom: 36px;
+        }
+
+        /* ==============================
+           FORM INPUTS
+        ============================== */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #a1a1aa;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0 16px;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-icon {
+            font-size: 15px;
+            color: #52525b;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 0;
+            background-color: transparent;
+            border: none;
+            font-size: 14px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #42424a;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+        }
+
+        /* Enhanced Interactive Focus States */
+        .input-wrapper:focus-within {
+            border-color: rgba(124, 108, 255, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(124, 108, 255, 0.15);
+        }
+
+        .input-wrapper:focus-within .input-icon {
+            color: #9d92ff;
+        }
+
+        /* ==============================
+           SIGN UP BUTTON
+        ============================== */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 12px;
+            box-shadow: 0 4px 20px rgba(99, 82, 232, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(99, 82, 232, 0.45);
+            background: linear-gradient(135deg, #9d92ff 0%, #6b5be0 100%);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Login link */
+        .login-link {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #71717a;
+        }
+
+        .login-link a {
+            color: #9d92ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .login-link a:hover {
+            color: #b4abff;
+            text-decoration: underline;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(3, 3, 3, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            color: #42424a;
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <div class="logo">My<span>Store</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/contact/">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="left-side">
+            <div class="badge">✦ Join MyStore Today</div>
+            <h1>Shop Smarter,<br>Live <span>Better</span></h1>
+            <p>
+                Create your premium account to discover a curated world of high-end products tailored exactly to your lifestyle.
+            </p>
+
+            <div class="feature-row">
+                <div class="feature-dot">🚀</div>
+                <span>Priority delivery straight to your doorstep</span>
+            </div>
+            <div class="feature-row">
+                <div class="feature-dot">🔒</div>
+                <span>Fully encrypted secure checkouts</span>
+            </div>
+            <div class="feature-row">
+                <div class="feature-dot">🎁</div>
+                <span>Exclusive member-only collections</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Create Account</h2>
+            <p>Get started with your free account today</p>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="name" name="username" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" id="email" name="email" placeholder="name@domain.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password1">Password1</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" id="password1" name="password1" placeholder="Min. 8 characters" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">Password2</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" id="password2" name="password2" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account →</button>
+            </form>
+
+            <p class="login-link">
+                Already have an account? <a href="/login/">Login</a>
+            </p>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MyStore. Crafted with precision.</p>
+    </footer>
+
+</body>
+</html>

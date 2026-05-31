@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Communication Node Gateway</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 0% 0%, #1a102e 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, #0a1f26 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 108, 255, 0.03) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        /* ==============================
+           CORE SPLIT MATRIX LAYOUT
+        ============================== */
+        .contact-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 80px;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 50px;
+        }
+
+        @media (max-width: 968px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                padding: 0 24px;
+                margin: 30px auto;
+            }
+        }
+
+        .contact-title-block h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1.5px;
+            margin-bottom: 10px;
+        }
+
+        .contact-title-block p {
+            font-size: 14px;
+            color: #71717a;
+            line-height: 1.5;
+            margin-bottom: 35px;
+        }
+
+        /* ==============================
+           LEFT COLUMN: CHANNELS CHIPS
+        ============================== */
+        .info-nodes-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .node-card {
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.4) 0%, rgba(12, 12, 18, 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: border-color 0.3s ease;
+        }
+
+        .node-card:hover {
+            border-color: rgba(124, 108, 255, 0.2);
+        }
+
+        .node-icon {
+            font-size: 20px;
+            color: #9d92ff;
+            background: rgba(157, 146, 255, 0.08);
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(157, 146, 255, 0.15);
+        }
+
+        .node-details h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .node-details p {
+            font-size: 13px;
+            color: #a1a1aa;
+            line-height: 1.4;
+        }
+
+        /* ==============================
+           RIGHT COLUMN: INTERACTIVE FORM
+        ============================== */
+        .form-panel {
+            background: linear-gradient(180deg, rgba(24, 24, 35, 0.6) 0%, rgba(12, 12, 18, 0.6) 100%);
+            border: 1px solid rgba(157, 146, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .form-panel {
+                padding: 24px;
+            }
+        }
+
+        /* Standard Field Structure */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #52525b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .matrix-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .matrix-input:focus {
+            border-color: #7c6cff;
+            box-shadow: 0 0 15px rgba(124, 108, 255, 0.15);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        textarea.matrix-input {
+            resize: none;
+            min-height: 130px;
+        }
+
+        /* Master Dispatch Action Trigger */
+        .dispatch-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 25px rgba(99, 82, 232, 0.3);
+        }
+
+        .dispatch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 82, 232, 0.5);
+        }
+
+        /* Network Status Inline Prompt */
+        .status-prompt {
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Map Segment Overlay Placeholder */
+        .map-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            margin: 20px auto 80px;
+            padding: 0 80px;
+        }
+
+        @media (max-width: 968px) {
+            .map-wrapper {
+                padding: 0 24px;
+                margin-bottom: 50px;
+            }
+        }
+
+        .map-placeholder {
+            height: 250px;
+            background: linear-gradient(180deg, rgba(16, 16, 24, 0.3) 0%, rgba(8, 8, 14, 0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #52525b;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/Collections/">Collections</a>
+            <a href="/contact/" style="color: white;">Contact Node</a>
+        </nav>
+    </header>
+
+    <!-- ARCHITECTURAL CONTAINER STRUCTURE -->
+    <main class="contact-wrapper">
+        
+        <!-- LEFT SIDEBAR PANEL: DIRECT PATH CORES -->
+        <div class="contact-title-block">
+            <h1>Connect with Our Node</h1>
+            <p>Have an inquiry regarding elite system specifications, pipeline routing tracking, or corporate fleet custom requests? Open a communication thread directly.</p>
+
+            <div class="info-nodes-stack">
+                <!-- Communication Node 1 -->
+                <div class="node-card">
+                    <div class="node-icon">✉</div>
+                    <div class="node-details">
+                        <h3>Core Network Address</h3>
+                        <p>matrix.support@mystore.io</p>
+                    </div>
+                </div>
+
+                <!-- Communication Node 2 -->
+                <div class="node-card">
+                    <div class="node-icon">📡</div>
+                    <div class="node-details">
+                        <h3>Direct Operational Link</h3>
+                        <p>+91 (80) 4920-8831</p>
+                    </div>
+                </div>
+
+                <!-- Communication Node 3 -->
+                <div class="node-card">
+                    <div class="node-icon">⬢</div>
+                    <div class="node-details">
+                        <h3>Geographical Headquarters</h3>
+                        <p>Bengaluru Grid Node, KA, India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR PANEL: SECURE FORM DISPATCH ENGINE -->
+        <section class="form-panel">
+            <!-- CSRF security framework hook for Django POST processing validation -->
+            <form id="contactForm" onsubmit="dispatchSignal(event)">
+                
+                <div class="form-group">
+                    <label>Identity Name / Handle</label>
+                    <input type="text" class="matrix-input" id="senderName" required placeholder="e.g., Alex Mercer">
+                </div>
+
+                <div class="form-group">
+                    <label>Network Routing Email</label>
+                    <input type="email" class="matrix-input" id="senderEmail" required placeholder="name@domain.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Inquiry Core Parameter</label>
+                    <input type="text" class="matrix-input" id="inquirySubject" required placeholder="e.g., Bulk Hardware Procurement">
+                </div>
+
+                <div class="form-group">
+                    <label>Message Content Payload</label>
+                    <textarea class="matrix-input" id="messagePayload" required placeholder="Type the technical scope of your transmission here..."></textarea>
+                </div>
+
+                <button type="submit" class="dispatch-btn">Transmit Signal Packet</button>
+                <div class="status-prompt" id="formStatusBox"></div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- HUB REGION INTERFACE MAP PLACEHOLDER -->
+    <div class="map-wrapper">
+        <div class="map-placeholder">
+            📡 [ Node Satellite Location Engine Active — Bengaluru Sector Grid ]
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span style="color:#9d92ff">Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/">Privacy Matrix</a>
+            <a href="/terms/">Terms of Use</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+    <!-- MOCK PACKET DISPATCH ENGINE SCRIPT -->
+    <script>
+        function dispatchSignal(event) {
+            event.preventDefault();
+            
+            const statusBox = document.getElementById('formStatusBox');
+            const submitBtn = document.querySelector('.dispatch-btn');
+            
+            // Lock out interactive layout changes during operational delay
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Encrypting Transmission Packet...";
+            statusBox.style.display = "block";
+            statusBox.style.color = "#a1a1aa";
+            statusBox.innerText = "Connecting to nearest boundary node...";
+
+            setTimeout(() => {
+                // Return success validation indicators cleanly
+                submitBtn.innerText = "Signal Received";
+                statusBox.style.color = "#10b981";
+                statusBox.innerText = "✦ Packet routed successfully. A team coordinator will intercept shortly.";
+                
+                // Clear fields
+                document.getElementById('senderName').value = "";
+                document.getElementById('senderEmail').value = "";
+                document.getElementById('inquirySubject').value = "";
+                document.getElementById('messagePayload').value = "";
+                
+                // Release operational lockout parameters after brief window
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Transmit Signal Packet";
+                    statusBox.style.display = "none";
+                }, 4000);
+
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

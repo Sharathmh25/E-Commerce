@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Premium Checkout</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 0% 100%, #10162e 0%, transparent 40%),
+                radial-gradient(circle at 100% 0%, #0a1c26 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 0;
+            right: 10%;
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 108, 255, 0.04) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        .back-store {
+            color: #b4abff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-store:hover {
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        /* ==============================
+           MAIN LAYOUT MATRIX
+        ============================== */
+        .cart-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 80px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 40px;
+        }
+
+        .cart-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .cart-subtitle {
+            font-size: 14px;
+            color: #71717a;
+            margin-bottom: 30px;
+        }
+
+        /* ==============================
+           ITEMS CONTAINER
+        ============================== */
+        .cart-items-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cart-card {
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.4) 0%, rgba(12, 12, 18, 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cart-card:hover {
+            border-color: rgba(124, 108, 255, 0.25);
+            background: linear-gradient(180deg, rgba(24, 24, 35, 0.5) 0%, rgba(14, 14, 22, 0.5) 100%);
+        }
+
+        .cart-product-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .cart-img-box {
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #0d0d14;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cart-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-details h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .cart-details p {
+            font-size: 12px;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quantity-matrix {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 4px;
+            user-select: none;
+        }
+
+        .matrix-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #a1a1aa;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .matrix-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .matrix-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            width: 36px;
+            text-align: center;
+        }
+
+        .cart-card-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 30px;
+            min-width: 180px;
+        }
+
+        .item-total-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            text-align: right;
+            width: 100px;
+        }
+
+        .remove-trash {
+            background: transparent;
+            border: none;
+            color: #3f3f46;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s ease;
+            padding: 4px;
+        }
+
+        .remove-trash:hover {
+            color: #ef4444;
+        }
+
+        /* ==============================
+           ORDER SUMMARY PANEL
+        ============================== */
+        .summary-panel {
+            background: linear-gradient(180deg, rgba(24, 24, 35, 0.6) 0%, rgba(12, 12, 18, 0.6) 100%);
+            border: 1px solid rgba(157, 146, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            height: fit-content;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .summary-panel h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .promo-block {
+            margin-bottom: 24px;
+        }
+
+        .promo-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .promo-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .promo-input:focus {
+            border-color: rgba(124, 108, 255, 0.5);
+        }
+
+        .promo-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0 20px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .promo-btn:hover {
+            background: white;
+            color: black;
+            border-color: transparent;
+        }
+
+        .promo-msg {
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 6px;
+            padding-left: 4px;
+            min-height: 16px;
+        }
+
+        .calculation-matrix {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .matrix-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #a1a1aa;
+        }
+
+        .matrix-row.discount-row {
+            color: #10b981;
+        }
+
+        .matrix-row span:last-child {
+            color: white;
+            font-weight: 500;
+        }
+
+        .matrix-row.discount-row span:last-child {
+            color: #10b981;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .total-row .grand-total-price {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #b4abff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .payment-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #52525b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+            user-select: none;
+        }
+
+        .pay-chip {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: #a1a1aa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pay-chip:hover {
+            border-color: rgba(124, 108, 255, 0.3);
+            color: white;
+        }
+
+        .pay-chip.active {
+            background: rgba(124, 108, 255, 0.08);
+            border-color: #7c6cff;
+            color: white;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 25px rgba(99, 82, 232, 0.3);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 82, 232, 0.5);
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+
+        /* ==============================
+           RESPONSIVE VIEWPORTS
+        ============================== */
+        @media (max-width: 1024px) {
+            .cart-wrapper {
+                grid-template-columns: 1fr;
+                padding: 0 24px;
+                margin: 20px auto;
+            }
+            header, footer {
+                padding: 20px 24px;
+            }
+        }
+
+        @media (max-width: 580px) {
+            .cart-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .cart-card-right {
+                width: 100%;
+                justify-content: space-between;
+                min-width: unset;
+            }
+            .item-total-price {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/Collections/" class="back-store"><i class="fa-solid fa-arrow-left"></i> Continue Shopping</a>
+        </nav>
+    </header>
+
+    <main class="cart-wrapper">
+        
+        <div>
+            <h1 class="cart-title">Your Order Matrix</h1>
+            <p class="cart-subtitle" id="itemsCountHeader">Review your luxury hardware allocation (0 items)</p>
+
+            <div class="cart-items-column" id="cartItemsContainer">
+                </div>
+        </div>
+
+        <div class="summary-panel">
+            <h2>Order Summary</h2>
+            
+            <div class="promo-block">
+                <div class="promo-container">
+                    <input type="text" class="promo-input" id="promoInput" placeholder="Enter code (PREMIUM10)">
+                    <button class="promo-btn" onclick="applyPromo()">Apply</button>
+                </div>
+                <div class="promo-msg" id="promoMessage"></div>
+            </div>
+
+            <div class="calculation-matrix">
+                <div class="matrix-row">
+                    <span>Subtotal</span>
+                    <span id="subtotalVal">₹0</span>
+                </div>
+                <div class="matrix-row discount-row" id="discountRow" style="display: none;">
+                    <span>Premium Discount (10%)</span>
+                    <span id="discountVal">-₹0</span>
+                </div>
+                <div class="matrix-row">
+                    <span>Shipping Architecture</span>
+                    <span style="color:#10b981;">FREE</span>
+                </div>
+                <div class="matrix-row">
+                    <span>Estimated GST (18%)</span>
+                    <span id="gstVal">₹0</span>
+                </div>
+            </div>
+
+            <div class="total-row">
+                <span>Total Secure Due</span>
+                <span class="grand-total-price" id="grandTotalVal">₹0</span>
+            </div>
+
+            <div class="payment-title">Select Gateway Engine</div>
+            <div class="payment-grid">
+                <div class="pay-chip active" onclick="selectPayment(this)">UPI</div>
+                <div class="pay-chip" onclick="selectPayment(this)">Card</div>
+                <div class="pay-chip" onclick="selectPayment(this)">Crypto</div>
+            </div>
+
+        <button class="checkout-btn" onclick="executeCheckout()">
+    Complete Transaction
+</button>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span>Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/privacy/">Privacy Matrix</a>
+            <a href="/terms/">Terms of Use</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+    <script>
+        // Unique IDs assigned to correct schema state
+        let activeCartItems = [
+            { id: 1, name: "Studio Pro Headphones", category: "audio", price: 24999, quantity: 1, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" },
+            { id: 14, name: "Chrono Smart Watch S4", category: "wearables", price: 32999, quantity: 1, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" },
+            { id: 39, name: "Quantum Strider 1.0", category: "footwear", price: 18999, quantity: 2, img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" }
+        ];
+
+        let activeDiscountPercentage = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCartList();
+        });
+
+        function renderCartList() {
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+
+            if(activeCartItems.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 0; color: #71717a;">
+                        <p style="font-size: 16px; margin-bottom: 20px;">Your hardware allocation stack is empty.</p>
+                        <a href="/Collections/" class="promo-btn" style="text-decoration:none; display:inline-block; line-height:38px;">Go Back to Products</a>
+                    </div>
+                `;
+                document.getElementById('itemsCountHeader').innerText = "Review your luxury hardware allocation (0 items)";
+                recalculatePriceTotals();
+                return;
+            }
+
+            let absoluteItemsCount = 0;
+
+            activeCartItems.forEach((item, index) => {
+                absoluteItemsCount += item.quantity;
+                const formattedProductTotal = (item.price * item.quantity).toLocaleString('en-IN');
+                
+                const cardHTML = `
+                    <div class="cart-card">
+                        <div class="cart-product-info">
+                            <div class="cart-img-box">
+                                <img src="${item.img}" alt="${item.name}">
+                            </div>
+                            <div class="cart-details">
+                                <h3>${item.name}</h3>
+                                <p>${item.category}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-card-right">
+                            <div class="quantity-matrix">
+                                <button class="matrix-btn" onclick="modifyQuantity(${index}, -1)" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                                <div class="matrix-value">${item.quantity}</div>
+                                <button class="matrix-btn" onclick="modifyQuantity(${index}, 1)" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <div class="item-total-price">₹${formattedProductTotal}</div>
+                            <button class="remove-trash" onclick="removeItem(${index})" aria-label="Remove item"><i class="fa-regular fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            document.getElementById('itemsCountHeader').innerText = `Review your luxury hardware allocation (${absoluteItemsCount} items)`;
+            recalculatePriceTotals();
+        }
+
+        function modifyQuantity(index, shiftDelta) {
+            activeCartItems[index].quantity += shiftDelta;
+            if(activeCartItems[index].quantity <= 0) {
+                removeItem(index);
+            } else {
+                renderCartList();
+            }
+        }
+
+        function removeItem(index) {
+            activeCartItems.splice(index, 1);
+            renderCartList();
+        }
+
+        function recalculatePriceTotals() {
+            let runningSubtotal = activeCartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+            let computationalDiscount = runningSubtotal * (activeDiscountPercentage / 100);
+            let computationalGst = (runningSubtotal - computationalDiscount) * 0.18;
+            let finalGrandTotal = (runningSubtotal - computationalDiscount) + computationalGst;
+
+            document.getElementById('subtotalVal').innerText = `₹${runningSubtotal.toLocaleString('en-IN')}`;
+            document.getElementById('gstVal').innerText = `₹${Math.round(computationalGst).toLocaleString('en-IN')}`;
+            document.getElementById('grandTotalVal').innerText = `₹${Math.round(finalGrandTotal).toLocaleString('en-IN')}`;
+
+            const discountRow = document.getElementById('discountRow');
+            if(activeDiscountPercentage > 0 && runningSubtotal > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('discountVal').innerText = `-₹${Math.round(computationalDiscount).toLocaleString('en-IN')}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+        }
+
+        function applyPromo() {
+            const inputVal = document.getElementById('promoInput').value.trim().toUpperCase();
+            const msgBox = document.getElementById('promoMessage');
+
+            if(inputVal === "PREMIUM10") {
+                activeDiscountPercentage = 10;
+                msgBox.style.color = "#10b981";
+                msgBox.innerText = "Premium code active: 10% deducted.";
+                recalculatePriceTotals();
+            } else if (inputVal === "") {
+                activeDiscountPercentage = 0;
+                msgBox.innerText = "";
+                recalculatePriceTotals();
+            } else {
+                activeDiscountPercentage = 0;
+                msgBox.style.color = "#ef4444";
+                msgBox.innerText = "Invalid verification code sequence.";
+                recalculatePriceTotals();
+            }
+        }
+
+        function selectPayment(selectedElement) {
+            document.querySelectorAll('.pay-chip').forEach(chip => chip.classList.remove('active'));
+            selectedElement.classList.add('active');
+        }
+
+        function executeCheckout() {
+        if (activeCartItems.length === 0) {
+        const msgBox = document.getElementById('promoMessage');
+        msgBox.style.color = "#ef4444";
+        msgBox.innerText = "Cannot proceed with empty cart.";
+        return;
+    }
+
+    alert("Transaction initiated...");
+
+    setTimeout(() => {
+        window.location.href = "/Completetransaction/";
+    }, 1000);
+}
+    </script>
+</body>
+</html>

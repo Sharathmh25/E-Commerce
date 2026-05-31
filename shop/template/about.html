@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Architectural Philosophy Matrix</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, #17123a 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, #06151f 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 25%;
+            right: -5%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(157, 146, 255, 0.02) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .explore-cta-nav {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .explore-cta-nav:hover {
+            background: white;
+            color: black;
+            border-color: transparent;
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* ==============================
+           HERO INTRODUCTION INTENT
+        ============================== */
+        .hero-section {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 80px auto 40px;
+            text-align: center;
+            padding: 0 24px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #9d92ff;
+            background: rgba(157, 146, 255, 0.07);
+            border: 1px solid rgba(157, 146, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
+        .hero-section h1 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: white;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .hero-section h1 span {
+            background: linear-gradient(135deg, #b5acf3 0%, #6352e8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 16px;
+            color: #a1a1aa;
+            line-height: 1.6;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* ==============================
+           GRID CORE PILLARS
+        ============================== */
+        .pillars-grid {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .pillar-card {
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.4) 0%, rgba(12, 12, 18, 0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            border-color: rgba(124, 108, 255, 0.2);
+            background: linear-gradient(180deg, rgba(24, 24, 35, 0.5) 0%, rgba(14, 14, 22, 0.5) 100%);
+            transform: translateY(-2px);
+        }
+
+        .pillar-icon {
+            font-size: 24px;
+            color: #9d92ff;
+            margin-bottom: 16px;
+        }
+
+        .pillar-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .pillar-card p {
+            font-size: 13px;
+            color: #71717a;
+            line-height: 1.5;
+        }
+
+        /* ==============================
+           INTERACTIVE TABS MATRIX
+        ============================== */
+        .tabs-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            width: 100%;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+
+        .tabs-header {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+            gap: 4px;
+        }
+
+        .tab-trigger {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #71717a;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tab-trigger:hover {
+            color: white;
+        }
+
+        .tab-trigger.active {
+            background: rgba(124, 108, 255, 0.1);
+            border: 1px solid rgba(124, 108, 255, 0.2);
+            color: #b4abff;
+        }
+
+        .tab-content-panel {
+            background: linear-gradient(180deg, rgba(16, 16, 24, 0.2) 0%, rgba(8, 8, 14, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 35px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .tab-content-panel.active {
+            display: block;
+        }
+
+        .tab-content-panel h4 {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 14px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .tab-content-panel p {
+            font-size: 14px;
+            color: #a1a1aa;
+        }
+
+        /* ==============================
+           FINAL ACTION LAYER
+        ============================== */
+        .bottom-cta-banner {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            width: 100%;
+            margin: 40px auto 100px;
+            padding: 0 40px;
+        }
+
+        .cta-inner {
+            background: linear-gradient(135deg, rgba(24, 24, 37, 0.6) 0%, rgba(10, 10, 15, 0.6) 100%);
+            border: 1px solid rgba(157, 146, 255, 0.15);
+            border-radius: 24px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .cta-inner h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .cta-inner p {
+            font-size: 14px;
+            color: #71717a;
+            margin-bottom: 30px;
+        }
+
+        .master-cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            border: none;
+            padding: 16px 40px;
+            border-radius: 14px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 25px rgba(99, 82, 232, 0.25);
+        }
+
+        .master-cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 82, 232, 0.45);
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+
+        /* ==============================
+           RESPONSIVE STRUCTURAL OVERRIDES
+        ============================== */
+        @media (max-width: 900px) {
+            header, footer {
+                padding: 20px 40px;
+            }
+            .hero-section h1 {
+                font-size: 38px;
+            }
+            .bottom-cta-banner {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 20px 24px;
+                text-align: center;
+            }
+            nav {
+                margin-left: 0;
+                justify-content: center;
+                gap: 15px;
+            }
+            nav a {
+                margin-left: 0;
+            }
+            .hero-section {
+                margin: 50px auto 30px;
+            }
+            .hero-section h1 {
+                font-size: 32px;
+            }
+            .pillars-grid {
+                grid-template-columns: 1fr;
+                padding: 0 24px;
+                gap: 16px;
+            }
+            .tabs-header {
+                flex-direction: column;
+                padding: 8px;
+            }
+            .tab-trigger {
+                width: 100%;
+                white-space: normal;
+            }
+            .tab-content-panel {
+                padding: 24px;
+            }
+            .cta-inner {
+                padding: 35px 20px;
+            }
+            .cta-inner h2 {
+                font-size: 22px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                padding: 30px 24px;
+                text-align: center;
+            }
+            .footer-links {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
+            .footer-links a {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/Collections/" class="explore-cta-nav">Enter Store Matrix</a>
+        </nav>
+    </header>
+
+    <!-- HERO HEADER -->
+    <section class="hero-section">
+        <div class="hero-badge">System Philosophy</div>
+        <h1>Engineered for the <span>Modern Aesthetic</span></h1>
+        <p>We build highly curated, ultra-premium hardware options intended for ecosystems that demand both peak visual performance and operational absolute fluid mechanics.</p>
+    </section>
+
+    <!-- CORE PILLARS GRID -->
+    <section class="pillars-grid">
+        <div class="pillar-card">
+            <div class="pillar-icon">✦</div>
+            <h3>Premium Engineering</h3>
+            <p>Every single detail undergoes strict quality controls ensuring precision calibration across your hardware allocations.</p>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-icon">⬢</div>
+            <h3>Fluid Interfaces</h3>
+            <p>Built completely cleanly to eliminate navigation friction. Experience seamless interactions from cart updates to secure checkouts.</p>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-icon">▲</div>
+            <h3>Global Logistics</h3>
+            <p>Direct priority delivery pipelines managed through distributed transit routing engines to secure arrival speeds.</p>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE EXPANSION TABS MATRIX -->
+    <section class="tabs-wrapper">
+        <div class="tabs-header">
+            <button class="tab-trigger active" onclick="switchPhilosophyTab(event, 'sustainability')">Sustainability Core</button>
+            <button class="tab-trigger" onclick="switchPhilosophyTab(event, 'security')">Security Protocols</button>
+            <button class="tab-trigger" onclick="switchPhilosophyTab(event, 'support')">Exclusive Tier Support</button>
+        </div>
+
+        <!-- Panel 1 -->
+        <div id="sustainability" class="tab-content-panel active">
+            <h4>Renewable Structural Commitments</h4>
+            <p>Our commitment to circular manufacturing ensures that components utilize refined, high-grade recycled metals and sustainable compound polymers. We actively optimize hardware casing matrices to lower carbon expenditure indices without sacrificing structural rigidity.</p>
+        </div>
+
+        <!-- Panel 2 -->
+        <div id="security" class="tab-content-panel">
+            <h4>Encrypted Transactional Pipelines</h4>
+            <p>Data privacy is prioritized globally. Every transaction passing through our node infrastructure uses end-to-end authorization parameters. Active accounts run inside highly protected session indices, preventing malicious cross-site credential intercepts.</p>
+        </div>
+
+        <!-- Panel 3 -->
+        <div id="support" class="tab-content-panel">
+            <h4>High-Priority Developer Support</h4>
+            <p>Premium users gain instantaneous connection tokens to our architecture engineering nodes. Whether managing fleet integrations or diagnosing local firmware parameters, our technical systems remain live 24/7 to clear routing obstructions.</p>
+        </div>
+    </section>
+
+    <!-- ENTRY ACTION BANNER -->
+    <section class="bottom-cta-banner">
+        <div class="cta-inner">
+            <h2>Ready to Initialize Configuration?</h2>
+            <p>Step through our gateway nodes and claim your specialized hardware matrix today.</p>
+            <a href="/Collections/" class="master-cta-btn">Initialize Marketplace Session</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span>Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/privacy/">Privacy Matrix</a>
+            <a href="/about/terms/">Terms of Use</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+    <!-- TABS INTERACTIVE MECHANICS SCRIPT -->
+    <script>
+        function switchPhilosophyTab(event, activeTabId) {
+            // Unset all active nodes
+            document.querySelectorAll('.tab-trigger').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content-panel').forEach(panel => panel.classList.remove('active'));
+
+            // Focus targets
+            event.currentTarget.classList.add('active');
+            document.getElementById(activeTabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

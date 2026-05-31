@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStore | Premium Collections</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* Prevents text highlight during fluid dragging */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                radial-gradient(circle at 0% 0%, #14102e 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, #0a1626 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #06060c 0%, #030303 100%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(124, 108, 255, 0.05) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        header {
+            position: relative;
+            z-index: 100;
+            background-color: rgba(3, 3, 3, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #9d92ff;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, rgba(157, 146, 255, 0.15), rgba(157, 146, 255, 0.05));
+            border: 1px solid rgba(157, 146, 255, 0.3);
+            color: #b4abff;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(99, 82, 232, 0.3);
+        }
+
+        /* ==============================
+           HERO BANNER
+        ============================== */
+        .hero {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(157, 146, 255, 0.1), rgba(157, 146, 255, 0.02));
+            color: #b4abff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(157, 146, 255, 0.2);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #b4abff 0%, #7c6cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: #71717a;
+        }
+
+        /* ==============================
+           CATEGORY FILTER TABS
+        ============================== */
+        .filters {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px 20px 40px;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            background-color: rgba(255, 255, 255, 0.02);
+            color: #a1a1aa;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(124, 108, 255, 0.4);
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(99, 82, 232, 0.25);
+        }
+
+        /* ==============================
+           PREMIUM DYNAMIC SLIDER LAYOUT
+        ============================== */
+        .products-section {
+            position: relative;
+            z-index: 10;
+            padding: 0 0 60px 0;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            padding: 0 80px;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .slider-viewport {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 15px 0;
+            cursor: grab;
+        }
+
+        .slider-viewport:active {
+            cursor: grabbing;
+        }
+
+        .slider-track {
+            display: flex;
+            gap: 24px;
+            padding-left: 80px; 
+            padding-right: 80px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .nav-zone {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 80px;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-zone-left {
+            left: 0;
+            background: linear-gradient(90deg, rgba(3,3,3,0.85) 0%, transparent 100%);
+        }
+
+        .nav-zone-right {
+            right: 0;
+            background: linear-gradient(-90deg, rgba(3,3,3,0.85) 0%, transparent 100%);
+        }
+
+        .products-section:hover .nav-zone {
+            opacity: 1;
+        }
+
+        .nav-zone-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .nav-zone:hover .nav-zone-btn {
+            transform: scale(1.1);
+            background: #6352e8;
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(99, 82, 232, 0.6);
+        }
+
+        /* ==============================
+           PRODUCT CARD MATRIX
+        ============================== */
+        .card {
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.6) 0%, rgba(12, 12, 18, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            flex-shrink: 0;
+            pointer-events: auto;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(124, 108, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 210px;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            background-color: #0d0d14;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .product-tag {
+            font-size: 10px;
+            font-weight: 600;
+            color: #9d92ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card p {
+            font-size: 12px;
+            color: #71717a;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            height: 38px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .add-btn {
+            padding: 8px 18px;
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #e4e4e7;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background: linear-gradient(135deg, #8c7eff 0%, #6352e8 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(99, 82, 232, 0.2);
+        }
+
+        /* ==============================
+           SLIDER CONTROL TRACK BAR
+        ============================== */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .premium-track-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            position: relative;
+        }
+
+        .premium-progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #8c7eff, #6352e8);
+            border-radius: 100px;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        footer {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(5, 5, 5, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #9d92ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 16px;
+            background-color: #010103;
+            font-size: 12px;
+            color: #3f3f46;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <header>
+        <a href="/" class="logo">My<span>Store</span></a>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/Collections/">Products</a>
+            <a href="/contact/">Contact</a>
+        </nav>
+        <a href="/cart/" class="cart-btn" id="cartButton">🛒 Cart (0)</a>
+    </header>
+
+    <section class="hero">
+        <div class="badge">✦ Kinetic Fluid UI v2</div>
+        <h1>Explore Future <span>Products</span></h1>
+        <p>Premium hardware engineering and clean elite craftsmanship.</p>
+    </section>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCategory('all', this)">All Collections</button>
+        <button class="filter-btn" onclick="filterCategory('audio', this)">🎧 Audio</button>
+        <button class="filter-btn" onclick="filterCategory('wearables', this)">⌚ Wearables</button>
+        <button class="filter-btn" onclick="filterCategory('accessories', this)">🎒 Accessories</button>
+        <button class="filter-btn" onclick="filterCategory('footwear', this)">👟 Footwear</button>
+    </div>
+
+    <section class="products-section">
+        <div class="section-header">
+            <h2 id="sectionTitle">Trending Essentials</h2>
+        </div>
+
+        <div class="slider-viewport" id="sliderViewport">
+            <div class="nav-zone nav-zone-left" onclick="slideLeft(event)">
+                <div class="nav-zone-btn">←</div>
+            </div>
+            <div class="nav-zone nav-zone-right" onclick="slideRight(event)">
+                <div class="nav-zone-btn">→</div>
+            </div>
+
+            <div class="slider-track" id="sliderTrack">
+                </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="premium-track-bar">
+                <div class="premium-progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-brand">
+            <h2>My<span style="color:#9d92ff">Store</span></h2>
+            <p>Your one-stop premium shop.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/about/">Privacy Matrix</a>
+            <a href="/terms/">Terms of Use</a>
+            <a href="/contact/">Contact</a>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        <p>&copy; 2026 MyStore. Crafted with frontend architecture precision.</p>
+    </div>
+
+    <script>
+        const productsDataset = [
+            // AUDIO
+            { id: 1, name: "Studio Pro Headphones", category: "audio", desc: "Acoustic audio design with pure hybrid cancellation.", price: "₹24,999", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" },
+            { id: 2, name: "Audiophile Earbuds X", category: "audio", desc: "True wireless earbuds optimized with customized high-fidelity drivers.", price: "₹12,499", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80" },
+            { id: 3, name: "SoundBar Horizon 9.1", category: "audio", desc: "Cinema architectural spatial acoustics for extreme immersive entertainment.", price: "₹45,999", img: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&q=80" },
+            { id: 4, name: "Omni Bluetooth Speaker", category: "audio", desc: "Rugged exterior housing absolute 360 sound coverage structure.", price: "₹8,999", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80" },
+            { id: 5, name: "Studio Reference Mic", category: "audio", desc: "Cardioid gold-sputtered condenser capsule for clear vocal tracking.", price: "₹18,299", img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80" },
+            { id: 6, name: "Pro Dynamic Audio Mixer", category: "audio", desc: "Multi-channel spatial tuning board engineered for real-time performance.", price: "₹34,499", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&q=80" },
+            { id: 7, name: "Pure Vinyl Turntable", category: "audio", desc: "Belt-driven analog core combined with modern lossless wireless links.", price: "₹29,999", img: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&q=80" },
+            { id: 8, name: "Acoustic ANC Buds Max", category: "audio", desc: "Smart computational audio isolation system tailored for commute.", price: "₹6,499", img: "https://images.unsplash.com/photo-1577174881658-0f30ed549adc?w=400&q=80" },
+            { id: 9, name: "Hi-Res Linear Amp", category: "audio", desc: "Ultra-low distortion signature audio stage amplifier system.", price: "₹15,799", img: "https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?w=400&q=80" },
+            { id: 10, name: "Neo Sound Pod", category: "audio", desc: "Minimalist desk design distributing clean multi-directional bass notes.", price: "₹4,199", img: "https://images.unsplash.com/photo-1589003077984-894e133dabab?w=400&q=80" },
+            { id: 11, name: "Carbon True-Monitors", category: "audio", desc: "Carbon fiber balanced armatures built for track engineering precision.", price: "₹21,000", img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80" },
+            { id: 12, name: "Vintage Wooden Radio", category: "audio", desc: "Handcrafted walnut case encasing an active modern amplifier loop.", price: "₹11,500", img: "https://images.unsplash.com/photo-1558537348-c0f8e733989d?w=400&q=80" },
+            { id: 13, name: "Echobox Waterproof Pod", category: "audio", desc: "Sealed IPX7 sound architecture designed to withstand dense weather drops.", price: "₹3,299", img: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=400&q=80" },
+
+            // WEARABLES
+            { id: 14, name: "Chrono Smart Watch S4", category: "wearables", desc: "Aero-grade titanium housing continuous physical sensory matrices.", price: "₹32,999", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" },
+            { id: 15, name: "Helix Fitness Tracker", category: "wearables", desc: "Ultra-thin continuous biometric feedback wrist wear element.", price: "₹5,499", img: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&q=80" },
+            { id: 16, name: "Aero Glass HUD", category: "wearables", desc: "Augmented visual contextual layer built lightweight for navigation.", price: "₹58,999", img: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" },
+            { id: 17, name: "Iris Smart Ring V1", category: "wearables", desc: "Polished zirconia ceramic interface checking metabolic sleep indices.", price: "₹19,999", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&q=80" },
+            { id: 18, name: "Tactile Haptic Vest", category: "wearables", desc: "Localized physical feedback array maps immersive simulation feedback.", price: "₹27,500", img: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400&q=80" },
+            { id: 19, name: "Vanguard Minimalist Watch", category: "wearables", desc: "Mechanical architecture tracking pristine automatic time intervals.", price: "₹14,200", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&q=80" },
+            { id: 20, name: "Pulse Elite Tracker Band", category: "wearables", desc: "Breathable stretch weave monitoring blood oxygen and heart rate.", price: "₹3,999", img: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=400&q=80" },
+            { id: 21, name: "Zenith GPS Aviator", category: "wearables", desc: "Offline satellite array maps paired with full altimeter readouts.", price: "₹48,900", img: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&q=80" },
+            { id: 22, name: "Saphire Luxe Mechanical", category: "wearables", desc: "Double dome sapphire crystalline casing exposed gear array framework.", price: "₹74,000", img: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&q=80" },
+            { id: 23, name: "Quantum Smart Band", category: "wearables", desc: "Flexible organic curved interface rendering active alert displays.", price: "₹7,299", img: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&q=80" },
+            { id: 24, name: "Active Dive Computer 500", category: "wearables", desc: "Sub-surface safe structure certified down to deep aquatic profiles.", price: "₹39,500", img: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=400&q=80" },
+            { id: 25, name: "Aura Balance Ring", category: "wearables", desc: "Slick matte metadata ring designed for lightweight health tracking.", price: "₹16,499", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80" },
+
+            // ACCESSORIES
+            { id: 26, name: "Cyber Matrix Keyboard", category: "accessories", desc: "Gasket mount mechanical system built with solid linear copper switches.", price: "₹16,499", img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80" },
+            { id: 27, name: "Precision Carbon Pack", category: "accessories", desc: "Waterproof outer membrane structuring high secure dynamic storage capacity.", price: "₹11,299", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80" },
+            { id: 28, name: "Apex Ergo Mouse", category: "accessories", desc: "Ergonomic thumb support structure sporting a high accuracy tracking eye.", price: "₹6,899", img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80" },
+            { id: 29, name: "MagSafe Stand Stand", category: "accessories", desc: "Machined block aluminum structure maintaining multi-angle power connections.", price: "₹4,500", img: "https://images.unsplash.com/photo-1622445262465-2481c4574875?w=400&q=80" },
+            { id: 30, name: "Leather Folio Briefcase", category: "accessories", desc: "Top grain structured hides carrying distinct modular gadget sleeves.", price: "₹13,999", img: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&q=80" },
+            { id: 31, name: "Thermal Isolation Flask", category: "accessories", desc: "Double wall vacuum titanium keeping internal fluids perfectly conditioned.", price: "₹3,499", img: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&q=80" },
+            { id: 32, name: "Graphite Desk Mat X", category: "accessories", desc: "Premium felt surface treating micro mouse drag configurations flawlessly.", price: "₹2,899", img: "https://images.unsplash.com/photo-1616410011236-7a42121dd981?w=400&q=80" },
+            { id: 33, name: "GaN Multi-Charger 140W", category: "accessories", desc: "Gallium Nitride charging node powering multiple devices simultaneously.", price: "₹5,200", img: "https://images.unsplash.com/photo-1619489646924-b4fce76b7556?w=400&q=80" },
+            { id: 34, name: "Minimalist Wallet Block", category: "accessories", desc: "Aircraft grade metal card plate clamping secure RFID defense profiles.", price: "₹3,100", img: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&q=80" },
+            { id: 35, name: "Vapor Camera Tech Sling", category: "accessories", desc: "Cushioned configurable tracking grid engineered for lenses and camera gear.", price: "₹7,600", img: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=400&q=80" },
+            { id: 36, name: "Stream Deck Control Pad", category: "accessories", desc: "Custom macro shortcuts pad mapped instantly to systemic dynamic processes.", price: "₹14,999", img: "https://images.unsplash.com/photo-1547119957-637f8679db1e?w=400&q=80" },
+            { id: 37, name: "Modular Tech Organiser", category: "accessories", desc: "Elastomer elastic loops sorting memory drives, power nodes and cables.", price: "₹2,499", img: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&q=80" },
+            { id: 38, name: "Nomad Passport Wallet", category: "accessories", desc: "Classic travel tracking leather containing hidden secure tracker pockets.", price: "₹4,200", img: "https://images.unsplash.com/photo-1590534247854-e97d5e3feef6?w=400&q=80" },
+
+            // FOOTWEAR
+            { id: 39, name: "Quantum Strider 1.0", category: "footwear", desc: "Nitrogen infused lattice midsoles for highly energetic compression return.", price: "₹18,999", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" },
+            { id: 40, name: "VaporKnit Minimalist", category: "footwear", desc: "Single strand structural thread forming adaptive skin fit layers.", price: "₹14,500", img: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&q=80" },
+            { id: 41, name: "Terra Trekker Boot", category: "footwear", desc: "GoreTex membrane system fused onto dense outdoor grip soles.", price: "₹22,499", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&q=80" },
+            { id: 42, name: "Aero Stealth Trainer", category: "footwear", desc: "Zero drop balancing platform designed specifically for lifting heavy loads.", price: "₹11,999", img: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&q=80" },
+            { id: 43, name: "Monolith Leather Chelsea", category: "footwear", desc: "Matte premium finish architecture detailed with robust step arches.", price: "₹26,000", img: "https://images.unsplash.com/photo-1638247025967-b4e38f6893b4?w=400&q=80" },
+            { id: 44, name: "Strato Foam Cushion Elite", category: "footwear", desc: "Massive volumetric foam footprint dampening long distance concrete shock.", price: "₹16,799", img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80" },
+            { id: 45, name: "Vanguard Court Classic", category: "footwear", desc: "Minimal full leather retro low tops assembled clean via fine stitching.", price: "₹9,899", img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&q=80" },
+            { id: 46, name: "Carbon Fiber Plate Runner", category: "footwear", desc: "Propulsive integrated internal rigid plate pushing speed dynamics.", price: "₹24,999", img: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400&q=80" },
+            { id: 47, name: "Element All-Weather Low", category: "footwear", desc: "Hydrophobic exterior canvas shell repelling dirt and water stains.", price: "₹12,400", img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80" },
+            { id: 48, name: "Eclipse Knit Racer", category: "footwear", desc: "High breathability weave patterns balancing localized moisture extraction.", price: "₹13,100", img: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&q=80" },
+            { id: 49, name: "Urban Commute Chukka", category: "footwear", desc: "Weatherproof suede surface mounted over flexible athletic rubber beds.", price: "₹15,200", img: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=400&q=80" },
+            { id: 50, name: "HyperLight Recovery Slide", category: "footwear", desc: "Post workout bio-contour structures comforting fatigued neural soles.", price: "₹4,999", img: "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=400&q=80" }
+        ];
+
+        let currentFilteredProducts = [...productsDataset];
+        let cartCount = 0;
+
+        // Kinetic Drag Parameters
+        let isDragging = false;
+        let startX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let maxScrollWidth = 0;
+
+        const viewport = document.getElementById('sliderViewport');
+        const track = document.getElementById('sliderTrack');
+        const progressFill = document.getElementById('progressFill');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProductsSlider('all');
+            setupKineticDrag();
+        });
+
+        window.addEventListener('resize', () => {
+            recalculateBoundaries();
+            clampTrackPosition();
+        });
+
+        function renderProductsSlider(categoryFilter) {
+            if (categoryFilter === 'all') {
+                currentFilteredProducts = [...productsDataset];
+                document.getElementById('sectionTitle').innerText = "Trending Essentials";
+            } else {
+                currentFilteredProducts = productsDataset.filter(p => p.category === categoryFilter);
+                document.getElementById('sectionTitle').innerText = `Elite ${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)}`;
+            }
+
+            track.innerHTML = '';
+            currentTranslate = 0;
+            prevTranslate = 0;
+            track.style.transform = 'translateX(0px)';
+
+            currentFilteredProducts.forEach(product => {
+                const cardHTML = `
+                    <div class="card" ondragstart="return false;">
+                        <div class="image-container" ondragstart="return false;">
+                            <img src="${product.img}" alt="${product.name}" loading="lazy" ondragstart="return false;">
+                        </div>
+                        <div class="product-tag">${product.category}</div>
+                        <h3>${product.name}</h3>
+                        <p>${product.desc}</p>
+                        <div class="card-bottom">
+                            <div class="price">${product.price}</div>
+                            <button class="add-btn" onclick="event.stopPropagation(); incrementCart(this)">+ Cart</button>
+                        </div>
+                    </div>
+                `;
+                track.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            setTimeout(recalculateBoundaries, 50);
+        }
+
+        function recalculateBoundaries() {
+            const trackWidth = track.scrollWidth;
+            const viewportWidth = viewport.clientWidth;
+            // Max bounds left translation value (80px is padding compensation)
+            maxScrollWidth = Math.max(0, trackWidth - viewportWidth + 160); 
+            updateProgressBar();
+        }
+
+        function filterCategory(category, buttonElement) {
+            // Manage Active States
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            
+            renderProductsSlider(category);
+        }
+
+        /* ==============================
+           DRAG ARCHITECTURE LOGIC
+        ============================== */
+        function setupKineticDrag() {
+            viewport.addEventListener('mousedown', dragStart);
+            viewport.addEventListener('mousemove', dragMove);
+            window.addEventListener('mouseup', dragEnd);
+
+            // Touch support
+            viewport.addEventListener('touchstart', dragStart, { passive: true });
+            viewport.addEventListener('touchmove', dragMove, { passive: true });
+            window.addEventListener('touchend', dragEnd);
+        }
+
+        function dragStart(e) {
+            isDragging = true;
+            startX = getPositionX(e);
+            track.style.transition = 'none'; // Clear spring smooth logic during active dragging
+        }
+
+        function dragMove(e) {
+            if (!isDragging) return;
+            const currentX = getPositionX(e);
+            const deltaX = currentX - startX;
+            currentTranslate = prevTranslate + deltaX;
+            
+            // Constrain constraints
+            if (currentTranslate > 0) currentTranslate = 0;
+            if (currentTranslate < -maxScrollWidth) currentTranslate = -maxScrollWidth;
+
+            track.style.transform = `translateX(${currentTranslate}px)`;
+            updateProgressBar();
+        }
+
+        function dragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            prevTranslate = currentTranslate;
+            track.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+        }
+
+        function getPositionX(e) {
+            return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function clampTrackPosition() {
+            if (prevTranslate < -maxScrollWidth) {
+                prevTranslate = -maxScrollWidth;
+                currentTranslate = -maxScrollWidth;
+                track.style.transform = `translateX(${currentTranslate}px)`;
+            }
+        }
+
+        /* ==============================
+           ZONE NAVIGATION BUTTONS
+        ============================== */
+        function slideLeft(e) {
+            e.stopPropagation();
+            currentTranslate += 324; // Width of card (300) + gap (24)
+            if (currentTranslate > 0) currentTranslate = 0;
+            prevTranslate = currentTranslate;
+            
+            track.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            track.style.transform = `translateX(${currentTranslate}px)`;
+            updateProgressBar();
+        }
+
+        function slideRight(e) {
+            e.stopPropagation();
+            currentTranslate -= 324;
+            if (currentTranslate < -maxScrollWidth) currentTranslate = -maxScrollWidth;
+            prevTranslate = currentTranslate;
+
+            track.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            track.style.transform = `translateX(${currentTranslate}px)`;
+            updateProgressBar();
+        }
+
+        /* ==============================
+           PROGRESS FILL COMPLIANCE
+        ============================== */
+        function updateProgressBar() {
+            if (maxScrollWidth === 0) {
+                progressFill.style.transform = 'scaleX(1)';
+                return;
+            }
+            const progressRatio = Math.abs(currentTranslate) / maxScrollWidth;
+            progressFill.style.transform = `scaleX(${Math.min(1, Math.max(0, progressRatio))})`;
+        }
+
+        /* ==============================
+           INTERACTIVE ACTIONS
+        ============================== */
+        function incrementCart(button) {
+            cartCount++;
+            document.getElementById('cartButton').innerText = `🛒 Cart (${cartCount})`;
+            
+            // Premium micro-haptic flash effect
+            button.innerText = "Added ✓";
+            button.style.background = "#22c55e";
+            setTimeout(() => {
+                button.innerText = "+ Cart";
+                button.style.background = "rgba(255, 255, 255, 0.03)";
+            }, 800);
+        }
+    </script>
+</body>
+</html>
